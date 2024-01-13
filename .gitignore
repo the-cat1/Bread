@@ -1,1 +1,8 @@
 # ignore
+
+*.i.*
+*.exe
+
+*.ignore.*
+out.txt
+build/
