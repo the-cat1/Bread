@@ -9,6 +9,7 @@ MAKE_ARGS		= -s
 
 # Compile
 CC				= gcc
+DB				= gdb
 OBJECTS 		= bread window/window window/windowproc util/list
 
 INCLUDE 		= include
@@ -53,6 +54,6 @@ folder:
 	if not exist build\util md build\util
 
 clean:
-	del /S /Q build
+	rd  /S /Q build
 	del /Q libbread.a
 	del /Q test.exe

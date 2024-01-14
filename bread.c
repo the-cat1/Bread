@@ -10,8 +10,8 @@ void BInit()
 {
     BInitWindow();
 
-    /* breadIcon */
-    // breadIcon = (HICON)LoadImage(NULL, "bread.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+    // 设定 breadIcon
+    breadIcon = (HICON)LoadImage(NULL, "bread.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
 
     inited = true;
 }

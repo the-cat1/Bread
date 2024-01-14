@@ -33,6 +33,6 @@ int BCreateWindow(char *classname, char *title, int style, HINSTANCE instance,
                   int x, int y, int width, int height, HWND parent, HMENU menu);
 void BShowWindow(WindowID wid, int cmdShow);
 int BMessageLoop();
-BList *BGetWindows();
+Window *BGetWindow(HWND hwnd);
 
 #endif

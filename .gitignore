@@ -2,6 +2,7 @@
 
 *.i.*
 *.exe
+*.a
 
 *.ignore.*
 out.txt

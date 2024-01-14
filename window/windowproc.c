@@ -1,6 +1,6 @@
 /**
  * Bread
- * 
+ *
  * window/wndproc.c
  * 窗口的回调函数。
  */
@@ -13,6 +13,8 @@
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    Window *window = BGetWindow(hwnd);
+
     switch (message)
     {
     case WM_DESTROY:

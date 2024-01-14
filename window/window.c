@@ -9,12 +9,7 @@ BList *windows;
 
 void BInitWindow()
 {
-    Window nullWindow;
-
-    ZeroMemory(&nullWindow, sizeof(nullWindow));
-
     windows = BList_create(sizeof(struct _Window));
-    BList_append(windows, &nullWindow);
 }
 
 void BQuitWindow()
@@ -44,13 +39,13 @@ int BRegisterClass(HINSTANCE instance, char *classname, UINT style, HBRUSH backg
 WindowID BCreateWindow(char *classname, char *title, int style, HINSTANCE instance,
                        int x, int y, int width, int height, HWND parent, HMENU menu)
 {
-    HWND hWnd;
+    HWND hwnd;
     Window window;
 
     if (classname == NULL || instance == NULL)
-        return false;
+        return -1;
 
-    hWnd = CreateWindow(
+    hwnd = CreateWindow(
         classname,
         title == NULL ? "Bread Window" : title,
         style == -1 ? WS_OVERLAPPEDWINDOW | WS_VISIBLE : style,
@@ -63,10 +58,10 @@ WindowID BCreateWindow(char *classname, char *title, int style, HINSTANCE instan
         instance,
         0);
 
-    if (hWnd = NULL)
-        return false;
+    if (hwnd = NULL)
+        return -1;
 
-    window.hwnd = hWnd;
+    window.hwnd = hwnd;
     BList_append(windows, &window);
 
     return windows->len - 1;
@@ -92,12 +87,17 @@ int BMessageLoop()
     return msg.wParam;
 }
 
-BList *BGetWindows()
-{
-    return windows;
-}
-
 Window *BGetWindow(HWND hwnd)
 {
-    
+    int i;
+    Window *window;
+
+    for (i = 0; i < windows->len; i++)
+    {
+        window = BList_get(windows, i);
+        if (window->hwnd = hwnd)
+            return window;
+    }
+
+    return NULL;
 }
