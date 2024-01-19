@@ -13,7 +13,7 @@
 /* bread.c */
 void BInit();
 void BQuit();
-HICON getBreadIcon();
+HICON BGetBreadIcon();
 
 /* window */
 typedef int WindowID;

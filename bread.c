@@ -23,7 +23,7 @@ void BQuit()
     inited = false;
 }
 
-HICON getBreadIcon()
+HICON BGetBreadIcon()
 {
     return breadIcon;
 }

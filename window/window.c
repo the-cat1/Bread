@@ -30,7 +30,7 @@ int BRegisterClass(HINSTANCE instance, char *classname, UINT style, HBRUSH backg
     wc.lpfnWndProc = (WNDPROC)WindowProc;
     wc.style = (style == -1 ? CS_DBLCLKS | CS_VREDRAW | CS_HREDRAW : style);
     wc.hbrBackground = (background ? background : (HBRUSH)GetStockObject(BLACK_BRUSH));
-    wc.hIcon = (icon ? icon : getBreadIcon());
+    wc.hIcon = (icon ? icon : BGetBreadIcon());
     wc.hCursor = (cursor ? cursor : LoadCursor(NULL, IDC_ARROW));
 
     return RegisterClass(&wc);
