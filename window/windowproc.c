@@ -13,7 +13,7 @@
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    Window *window = BGetWindow(hwnd);
+    BWindow *window = BGetWindow(hwnd);
 
     switch (message)
     {

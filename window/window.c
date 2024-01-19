@@ -5,16 +5,16 @@
 #include "window.h"
 #include "util.h"
 
-BList *windows;
+BList *bwindows;
 
 void BInitWindow()
 {
-    windows = BList_create(sizeof(struct _Window));
+    bwindows = BList_create(sizeof(BWindow));
 }
 
 void BQuitWindow()
 {
-    BList_free(windows);
+    BList_free(bwindows);
 }
 
 int BRegisterClass(HINSTANCE instance, char *classname, UINT style, HBRUSH background, HICON icon, HCURSOR cursor)
@@ -40,7 +40,7 @@ WindowID BCreateWindow(char *classname, char *title, int style, HINSTANCE instan
                        int x, int y, int width, int height, HWND parent, HMENU menu)
 {
     HWND hwnd;
-    Window window;
+    BWindow window;
 
     if (classname == NULL || instance == NULL)
         return -1;
@@ -62,14 +62,14 @@ WindowID BCreateWindow(char *classname, char *title, int style, HINSTANCE instan
         return -1;
 
     window.hwnd = hwnd;
-    BList_append(windows, &window);
+    BList_append(bwindows, &window);
 
-    return windows->len - 1;
+    return bwindows->len - 1;
 }
 
 void BShowWindow(WindowID wid, int cmdShow)
 {
-    Window *window = BList_get(windows, wid);
+    BWindow *window = BList_get(bwindows, wid);
     ShowWindow(window->hwnd, cmdShow);
     UpdateWindow(window->hwnd);
 }
@@ -87,14 +87,14 @@ int BMessageLoop()
     return msg.wParam;
 }
 
-Window *BGetWindow(HWND hwnd)
+BWindow *BGetWindow(HWND hwnd)
 {
     int i;
-    Window *window;
+    BWindow *window;
 
-    for (i = 0; i < windows->len; i++)
+    for (i = 0; i < bwindows->len; i++)
     {
-        window = BList_get(windows, i);
+        window = BList_get(bwindows, i);
         if (window->hwnd = hwnd)
             return window;
     }

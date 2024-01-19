@@ -17,13 +17,10 @@ HICON getBreadIcon();
 
 /* window */
 typedef int WindowID;
-typedef void (*WindowDrawEventFunction)(WindowID);
-typedef struct _Window
+typedef struct
 {
     HWND hwnd;
-    WindowDrawEventFunction drawEF;
-} Window;
-
+} BWindow;
 
 void BInitWindow();
 void BQuitWindow();
@@ -33,6 +30,6 @@ int BCreateWindow(char *classname, char *title, int style, HINSTANCE instance,
                   int x, int y, int width, int height, HWND parent, HMENU menu);
 void BShowWindow(WindowID wid, int cmdShow);
 int BMessageLoop();
-Window *BGetWindow(HWND hwnd);
+BWindow *BGetWindow(HWND hwnd);
 
 #endif
