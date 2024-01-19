@@ -7,3 +7,4 @@
 *.ignore.*
 out.txt
 build/
+release/

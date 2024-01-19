@@ -1,16 +1,18 @@
 # Makefile
 
-# Version
+# Version Release
 VERSION			= 0.0.1
 COMPILE_NUM		= 1
 
-#Make
-MAKE_ARGS		= -s
+# Make
+MAKE_ARGS		= --no-print-directory
 
 # Compile
 CC				= gcc
 DB				= gdb
 OBJECTS 		= bread window/window window/windowproc util/list
+BUILD_DIR		= build
+RELEASE_DIR		= release
 
 INCLUDE 		= include
 CARGS			= -I $(INCLUDE) -mwindows
@@ -34,26 +36,27 @@ ifneq ($(OS), Windows_NT)
 	@echo Bread just can compile or run on Windows!
 else
 	$(MAKE) $(MAKE_ARGS) folder
-	$(MAKE) $(MAKE_ARGS) libbread.a
+	$(MAKE) $(MAKE_ARGS) $(RELEASE_DIR)/libbread.a
 endif
 
 test:
-	$(MAKE) $(MAKE_ARGS) folder
-	$(MAKE) $(MAKE_ARGS) libbread.a
-	$(CC) test.c -o test.exe -L./ -lbread $(CARGS)
+	$(MAKE) $(MAKE_ARGS) all
+	$(CC) test.c -o test.exe -L$(RELEASE_DIR) -lbread $(CARGS)
 
-libbread.a: $(objs)
-	ar -rc libbread.a $(objs)
+$(RELEASE_DIR)/libbread.a: $(objs)
+	ar -rc $(RELEASE_DIR)/libbread.a $(objs)
 
-build/%.o: %.c
-	$(CC) $(CARGS) -c $*.c -o build/$*.o
+$(BUILD_DIR)/%.o: %.c
+	$(CC) $(CARGS) -c $*.c -o $(BUILD_DIR)/$*.o
 
 folder:
-	if not exist build md build
-	if not exist build\window md build\window
-	if not exist build\util md build\util
+	if not exist $(BUILD_DIR) md $(BUILD_DIR)
+	if not exist $(BUILD_DIR)\window md $(BUILD_DIR)\window
+	if not exist $(BUILD_DIR)\util md $(BUILD_DIR)\util
+
+	if not exist $(RELEASE_DIR) md $(RELEASE_DIR)
 
 clean:
-	rd  /S /Q build
-	del /Q libbread.a
-	del /Q test.exe
+	if exist $(BUILD_DIR) rd /S /Q $(BUILD_DIR)
+	if exist $(RELEASE_DIR) rd /S /Q $(RELEASE_DIR)
+	if exist test.exe del test.exe
