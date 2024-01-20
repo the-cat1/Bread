@@ -8,6 +8,6 @@
 - the-cat1
 
 ### 美术
-  - 图标
-    - Mojang
-    - 图标用一下 Minecraft 的不过分吧……
+- 图标
+  - the-cat1
+    - 现在是我自己画的了。
