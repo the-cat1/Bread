@@ -10,8 +10,8 @@
 
 /* util */
 /* BList */
-// List最小的长度，不能为 0
-#define LIST_MIN_LENGTH 1
+// BList最小的长度，不能为 0
+#define BLIST_MIN_LENGTH 1
 
 typedef struct
 {
@@ -20,11 +20,11 @@ typedef struct
     size_t esize;
 } BList;
 
-BList *BList_create(size_t esize);
-void BList_append(BList *list, void *element);
-void BList_remove_last(BList *list);
-void *BList_get(BList *list, unsigned int index);
-void BList_free(BList *list);
+BList *BListCreate(size_t esize);
+void BListAppend(BList *list, void *element);
+void BListRemoveLast(BList *list);
+void *BListGet(BList *list, unsigned int index);
+void BListFree(BList *list);
 
 /* bread.c */
 void BInit();

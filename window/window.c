@@ -8,12 +8,12 @@ BList *bwindows;
 
 void BInitWindow()
 {
-    bwindows = BList_create(sizeof(BWindow));
+    bwindows = BListCreate(sizeof(BWindow));
 }
 
 void BQuitWindow()
 {
-    BList_free(bwindows);
+    BListFree(bwindows);
 }
 
 int BRegisterClass(HINSTANCE instance, char *classname, UINT style, HBRUSH background, HICON icon, HCURSOR cursor)
@@ -61,14 +61,14 @@ BWindowID BCreateWindow(char *classname, char *title, int style, HINSTANCE insta
         return -1;
 
     window.hwnd = hwnd;
-    BList_append(bwindows, &window);
+    BListAppend(bwindows, &window);
 
     return bwindows->len - 1;
 }
 
 void BShowWindow(BWindowID wid, int cmdShow)
 {
-    BWindow *window = BList_get(bwindows, wid);
+    BWindow *window = BListGet(bwindows, wid);
     ShowWindow(window->hwnd, cmdShow);
     UpdateWindow(window->hwnd);
 }
@@ -93,7 +93,7 @@ BWindow *BGetWindow(HWND hwnd)
 
     for (i = 0; i < bwindows->len; i++)
     {
-        window = BList_get(bwindows, i);
+        window = BListGet(bwindows, i);
         if (window->hwnd = hwnd)
             return window;
     }
