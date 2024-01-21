@@ -2,7 +2,7 @@
 
 int APIENTRY WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int cmdShow)
 {
-    WindowID wid;
+    BWindowID wid;
     int param;
 
     BInit();

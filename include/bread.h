@@ -32,7 +32,7 @@ void BQuit();
 HICON BGetBreadIcon();
 
 /* window.c */
-typedef int WindowID;
+typedef int BWindowID;
 typedef struct
 {
     HWND hwnd;
@@ -44,7 +44,7 @@ void BQuitWindow();
 int BRegisterClass(HINSTANCE instance, char *classname, UINT style, HBRUSH background, HICON icon, HCURSOR cursor);
 int BCreateWindow(char *classname, char *title, int style, HINSTANCE instance,
                   int x, int y, int width, int height, HWND parent, HMENU menu);
-void BShowWindow(WindowID wid, int cmdShow);
+void BShowWindow(BWindowID wid, int cmdShow);
 int BMessageLoop();
 BWindow *BGetWindow(HWND hwnd);
 

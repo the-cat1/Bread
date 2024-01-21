@@ -35,7 +35,7 @@ int BRegisterClass(HINSTANCE instance, char *classname, UINT style, HBRUSH backg
     return RegisterClass(&wc);
 }
 
-WindowID BCreateWindow(char *classname, char *title, int style, HINSTANCE instance,
+BWindowID BCreateWindow(char *classname, char *title, int style, HINSTANCE instance,
                        int x, int y, int width, int height, HWND parent, HMENU menu)
 {
     HWND hwnd;
@@ -66,7 +66,7 @@ WindowID BCreateWindow(char *classname, char *title, int style, HINSTANCE instan
     return bwindows->len - 1;
 }
 
-void BShowWindow(WindowID wid, int cmdShow)
+void BShowWindow(BWindowID wid, int cmdShow)
 {
     BWindow *window = BList_get(bwindows, wid);
     ShowWindow(window->hwnd, cmdShow);
