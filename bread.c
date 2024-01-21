@@ -1,6 +1,5 @@
 #include <stdbool.h>
 
-#include "util.h"
 #include "bread.h"
 
 bool inited = false;

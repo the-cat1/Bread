@@ -3,7 +3,6 @@
 
 #include "bread.h"
 #include "window.h"
-#include "util.h"
 
 BList *bwindows;
 

@@ -5,17 +5,33 @@
 
 #include <windows.h>
 
-#include "util.h"
-
 #ifndef _BREAD_H
 #define _BREAD_H
+
+/* util */
+/* BList */
+// List最小的长度，不能为 0
+#define LIST_MIN_LENGTH 1
+
+typedef struct
+{
+    char *datas;
+    unsigned int len;
+    size_t esize;
+} BList;
+
+BList *BList_create(size_t esize);
+void BList_append(BList *list, void *element);
+void BList_remove_last(BList *list);
+void *BList_get(BList *list, unsigned int index);
+void BList_free(BList *list);
 
 /* bread.c */
 void BInit();
 void BQuit();
 HICON BGetBreadIcon();
 
-/* window */
+/* window.c */
 typedef int WindowID;
 typedef struct
 {

@@ -8,7 +8,6 @@
 #include <stdio.h>
 
 #include "bread.h"
-#include "util.h"
 #include "window.h"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
