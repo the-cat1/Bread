@@ -1,27 +1,33 @@
 #include <windows.h>
+#include <string.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 #include "bread.h"
 #include "window.h"
 
-BList *bwindows;
+static BList *bwindows;
+static BList *bwindow_classes;
 
 void BInitWindow()
 {
     bwindows = BListCreate(sizeof(BWindow));
+    bwindow_classes = BListCreate(sizeof(BWindowClass));
 }
 
 void BQuitWindow()
 {
     BListFree(bwindows);
+    BListFree(bwindow_classes);
 }
 
-int BRegisterClass(HINSTANCE instance, char *classname, UINT style, HBRUSH background, HICON icon, HCURSOR cursor)
+BWindowClassID BRegisterWindowClass(HINSTANCE instance, char *classname, UINT style, HBRUSH background, HICON icon, HCURSOR cursor)
 {
     WNDCLASS wc;
+    BWindowClass bwc;
 
     if (instance == NULL || classname == NULL)
-        return false;
+        return -1;
 
     ZeroMemory(&wc, sizeof wc);
     wc.hInstance = instance;
@@ -32,16 +38,24 @@ int BRegisterClass(HINSTANCE instance, char *classname, UINT style, HBRUSH backg
     wc.hIcon = (icon ? icon : BGetBreadIcon());
     wc.hCursor = (cursor ? cursor : LoadCursor(NULL, IDC_ARROW));
 
-    return RegisterClass(&wc);
+    if (!RegisterClass(&wc))
+        return -1;
+
+    bwc.classname = malloc(strlen(classname) + 1);
+    strcpy(bwc.classname, classname);
+    BListAppend(bwindow_classes, &bwc);
+
+    return bwindow_classes->len - 1;
 }
 
-BWindowID BCreateWindow(char *classname, char *title, int style, HINSTANCE instance,
-                       int x, int y, int width, int height, HWND parent, HMENU menu)
+BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style, HINSTANCE instance,
+                        int x, int y, int width, int height, HWND parent, HMENU menu)
 {
     HWND hwnd;
     BWindow window;
+    char *classname = BGetWindowClass(wcid)->classname;
 
-    if (classname == NULL || instance == NULL)
+    if (wcid < 0 || instance == NULL)
         return -1;
 
     hwnd = CreateWindow(
@@ -99,4 +113,9 @@ BWindow *BGetWindow(HWND hwnd)
     }
 
     return NULL;
+}
+
+BWindowClass *BGetWindowClass(BWindowClassID wcid)
+{
+    return BListGet(bwindow_classes, wcid);
 }

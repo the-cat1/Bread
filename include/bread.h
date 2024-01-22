@@ -37,15 +37,21 @@ typedef struct
 {
     HWND hwnd;
 } BWindow;
+typedef int BWindowClassID;
+typedef struct
+{
+    char *classname;
+} BWindowClass;
 
 void BInitWindow();
 void BQuitWindow();
 
-int BRegisterClass(HINSTANCE instance, char *classname, UINT style, HBRUSH background, HICON icon, HCURSOR cursor);
-int BCreateWindow(char *classname, char *title, int style, HINSTANCE instance,
-                  int x, int y, int width, int height, HWND parent, HMENU menu);
+BWindowClassID BRegisterWindowClass(HINSTANCE instance, char *classname, UINT style, HBRUSH background, HICON icon, HCURSOR cursor);
+BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style, HINSTANCE instance,
+                        int x, int y, int width, int height, HWND parent, HMENU menu);
 void BShowWindow(BWindowID wid, int cmdShow);
 int BMessageLoop();
 BWindow *BGetWindow(HWND hwnd);
+BWindowClass *BGetWindowClass(BWindowClassID wcid);
 
 #endif
