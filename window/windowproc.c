@@ -12,7 +12,15 @@
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    BWindow *window = BGetWindow(hwnd);
+    BWindowID wid;
+    BWindowClass *window;
+
+    wid = BGetWindowIDByHwnd(hwnd);
+    if (wid < 0)
+        goto defwinproc;
+    window = BGetWindowClassByID(BGetWindowByID(wid)->wcid);
+    if (!window)
+        goto defwinproc;
 
     switch (message)
     {
@@ -20,10 +28,19 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
         PostQuitMessage(0);
         break;
 
+    case WM_KEYDOWN:
+        if (window->wcb_keydown)
+            window->wcb_keydown(wid);
+        else
+            goto defwinproc;
+
     default:
-        return DefWindowProc(hwnd, message, wParam, lParam);
+        goto defwinproc;
         break;
     }
 
     return 0;
+
+defwinproc:
+    return DefWindowProc(hwnd, message, wParam, lParam);
 }

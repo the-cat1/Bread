@@ -42,6 +42,7 @@ BWindowClassID BRegisterWindowClass(HINSTANCE instance, char *classname, UINT st
         return -1;
 
     bwc.classname = malloc(strlen(classname) + 1);
+    bwc.wcb_keydown = NULL;
     strcpy(bwc.classname, classname);
     BListAppend(bwindow_classes, &bwc);
 
@@ -53,7 +54,7 @@ BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style, HINSTANCE i
 {
     HWND hwnd;
     BWindow window;
-    char *classname = BGetWindowClass(wcid)->classname;
+    char *classname = BGetWindowClassByID(wcid)->classname;
 
     if (wcid < 0 || instance == NULL)
         return -1;
@@ -75,6 +76,7 @@ BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style, HINSTANCE i
         return -1;
 
     window.hwnd = hwnd;
+    window.wcid = wcid;
     BListAppend(bwindows, &window);
 
     return bwindows->len - 1;
@@ -100,7 +102,7 @@ int BMessageLoop()
     return msg.wParam;
 }
 
-BWindow *BGetWindow(HWND hwnd)
+BWindowID BGetWindowIDByHwnd(HWND hwnd)
 {
     int i;
     BWindow *window;
@@ -109,13 +111,27 @@ BWindow *BGetWindow(HWND hwnd)
     {
         window = BListGet(bwindows, i);
         if (window->hwnd = hwnd)
-            return window;
+            return i;
     }
 
-    return NULL;
+    return -1;
 }
 
-BWindowClass *BGetWindowClass(BWindowClassID wcid)
+BWindow *BGetWindowByHwnd(HWND hwnd)
+{
+    int wid = BGetWindowIDByHwnd(hwnd);
+
+    if (wid < 0)
+        return NULL;
+    return BListGet(bwindows, wid);
+}
+
+BWindow *BGetWindowByID(BWindowID wid)
+{
+    return BListGet(bwindows, wid);
+}
+
+BWindowClass *BGetWindowClassByID(BWindowClassID wcid)
 {
     return BListGet(bwindow_classes, wcid);
 }
