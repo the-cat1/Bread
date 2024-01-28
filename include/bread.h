@@ -32,15 +32,16 @@ void BQuit();
 HICON BGetBreadIcon();
 
 /* window.c */
-// Window Callback
 typedef int BWindowID;
 typedef int BWindowClassID;
 
+// Window Callback
 typedef void (*BWCBKeydown)(BWindowID);
+typedef void (*BWCBUpdate)(BWindowID);
 
 typedef struct
 {
-    HWND hwnd;
+    HWND hWnd;
     BWindowClassID wcid;
 } BWindow;
 
@@ -57,9 +58,9 @@ BWindowClassID BRegisterWindowClass(HINSTANCE instance, char *classname, UINT st
 BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style, HINSTANCE instance,
                         int x, int y, int width, int height, HWND parent, HMENU menu);
 void BShowWindow(BWindowID wid, int cmdShow);
-int BMessageLoop();
-BWindowID BGetWindowIDByHwnd(HWND hwnd);
-BWindow *BGetWindowByHwnd(HWND hwnd);
+int BMessageLoop(BWindowID wid, BWCBUpdate wcb_update);
+BWindowID BGetWindowIDByHwnd(HWND hWnd);
+BWindow *BGetWindowByHwnd(HWND hWnd);
 BWindow *BGetWindowByID(BWindowID wid);
 BWindowClass *BGetWindowClassByID(BWindowClassID wcid);
 

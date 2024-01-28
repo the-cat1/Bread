@@ -52,14 +52,14 @@ BWindowClassID BRegisterWindowClass(HINSTANCE instance, char *classname, UINT st
 BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style, HINSTANCE instance,
                         int x, int y, int width, int height, HWND parent, HMENU menu)
 {
-    HWND hwnd;
+    HWND hWnd;
     BWindow window;
     char *classname = BGetWindowClassByID(wcid)->classname;
 
     if (wcid < 0 || instance == NULL)
         return -1;
 
-    hwnd = CreateWindow(
+    hWnd = CreateWindow(
         classname,
         title == NULL ? "Bread Window" : title,
         style == -1 ? WS_OVERLAPPEDWINDOW | WS_VISIBLE : style,
@@ -72,10 +72,10 @@ BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style, HINSTANCE i
         instance,
         0);
 
-    if (hwnd = NULL)
+    if (hWnd = NULL)
         return -1;
 
-    window.hwnd = hwnd;
+    window.hWnd = hWnd;
     window.wcid = wcid;
     BListAppend(bwindows, &window);
 
@@ -85,24 +85,34 @@ BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style, HINSTANCE i
 void BShowWindow(BWindowID wid, int cmdShow)
 {
     BWindow *window = BListGet(bwindows, wid);
-    ShowWindow(window->hwnd, cmdShow);
-    UpdateWindow(window->hwnd);
+    ShowWindow(window->hWnd, cmdShow);
+    UpdateWindow(window->hWnd);
 }
 
-int BMessageLoop()
+int BMessageLoop(BWindowID wid, BWCBUpdate wcb_update)
 {
     MSG msg;
 
-    while (GetMessage(&msg, NULL, 0, 0) > 0)
+    while (true)
     {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
+        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        {
+            if (msg.message == WM_QUIT)
+                break;
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        else
+        {
+            if (wcb_update)
+                wcb_update(wid);
+        }
     }
 
     return msg.wParam;
 }
 
-BWindowID BGetWindowIDByHwnd(HWND hwnd)
+BWindowID BGetWindowIDByHwnd(HWND hWnd)
 {
     int i;
     BWindow *window;
@@ -110,16 +120,16 @@ BWindowID BGetWindowIDByHwnd(HWND hwnd)
     for (i = 0; i < bwindows->len; i++)
     {
         window = BListGet(bwindows, i);
-        if (window->hwnd = hwnd)
+        if (window->hWnd = hWnd)
             return i;
     }
 
     return -1;
 }
 
-BWindow *BGetWindowByHwnd(HWND hwnd)
+BWindow *BGetWindowByHwnd(HWND hWnd)
 {
-    int wid = BGetWindowIDByHwnd(hwnd);
+    int wid = BGetWindowIDByHwnd(hWnd);
 
     if (wid < 0)
         return NULL;

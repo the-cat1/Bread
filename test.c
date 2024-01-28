@@ -6,6 +6,11 @@ void keydown(BWindowID wid)
     MessageBox(NULL, "你按下了按键！", "友情提示", MB_ICONINFORMATION);
 }
 
+void update(BWindowID wid)
+{
+    // 未实现……
+}
+
 int APIENTRY WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int cmdShow)
 {
     BWindowID wid;
@@ -13,13 +18,13 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
     int param;
 
     BInit();
-    
+
     wcid = BRegisterWindowClass(instance, "TEST-WIN", -1, NULL, NULL, NULL);
     BGetWindowClassByID(wcid)->wcb_keydown = keydown;
     wid = BCreateWindow(wcid, NULL, -1, instance, -1, -1, -1, -1, NULL, NULL);
 
     BShowWindow(wid, cmdShow);
-    param = BMessageLoop();
+    param = BMessageLoop(wid, update);
 
     BQuit();
 
