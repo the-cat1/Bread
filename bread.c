@@ -1,6 +1,15 @@
-#include <stdbool.h>
+/**
+ * Bread
+ * bread.h
+ * 
+ * 对引擎的操作。
+ */
 
 #include "bread.h"
+
+#include <stdbool.h>
+
+#include "window.h"
 
 bool inited = false;
 HICON breadIcon;

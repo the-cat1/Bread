@@ -1,4 +1,5 @@
 #include "bread.h"
+#include "window.h"
 
 void keydown(BWindowID wid)
 {
@@ -11,7 +12,7 @@ void update(BWindowID wid)
     // 未实现……
 }
 
-int APIENTRY WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int cmdShow)
+int APIENTRY WinMain(HINSTANCE instance, HINSTANCE, LPSTR cmdLine, int cmdShow)
 {
     BWindowID wid;
     BWindowClassID wcid;

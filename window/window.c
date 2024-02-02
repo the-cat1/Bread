@@ -1,13 +1,25 @@
+/**
+ * Bread
+ * window/window.c
+ * 
+ * 对窗口的操作。
+ */
+
+#include "window.h"
+
 #include <windows.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
 #include "bread.h"
-#include "window.h"
+#include "util/list.h"
 
 static BList *bwindows;
 static BList *bwindow_classes;
+
+// 在 window/windowproc.c 中定义
+LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
 
 void BInitWindow()
 {
@@ -21,7 +33,9 @@ void BQuitWindow()
     BListFree(bwindow_classes);
 }
 
-BWindowClassID BRegisterWindowClass(HINSTANCE instance, char *classname, UINT style, HBRUSH background, HICON icon, HCURSOR cursor)
+BWindowClassID BRegisterWindowClass(HINSTANCE instance, char *classname,
+                                    UINT style, HBRUSH background, HICON icon,
+                                    HCURSOR cursor)
 {
     WNDCLASS wc;
     BWindowClass bwc;
@@ -49,8 +63,9 @@ BWindowClassID BRegisterWindowClass(HINSTANCE instance, char *classname, UINT st
     return bwindow_classes->len - 1;
 }
 
-BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style, HINSTANCE instance,
-                        int x, int y, int width, int height, HWND parent, HMENU menu)
+BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style,
+                        HINSTANCE instance, int x, int y, int width,
+                        int height, HWND parent, HMENU menu)
 {
     HWND hWnd;
     BWindow window;

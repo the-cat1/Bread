@@ -1,3 +1,12 @@
+/**
+ * Bread
+ * util/list.c
+ * 
+ * 对列表的操作。
+ */
+
+#include "util/list.h"
+
 #include <stdlib.h>
 #include <memory.h>
 
