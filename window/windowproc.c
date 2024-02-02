@@ -10,20 +10,19 @@
 #include "bread.h"
 #include "window.h"
 
-HDC hDC = 0;
-HDC getHDC() { return hDC; };
-
 #define DEFWINPROC() DefWindowProc(hWnd, message, wParam, lParam)
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     BWindowID wid;
-    BWindowClass *window;
+    BWindow *window;
+    BWindowClass *windowclass;
 
     wid = BGetWindowIDByHwnd(hWnd);
     if (wid < 0)
         return DEFWINPROC();
-    window = BGetWindowClassByID(BGetWindowByID(wid)->wcid);
-    if (!window)
+    window = BGetWindowByID(wid);
+    windowclass = BGetWindowClassByID(window->wcid);
+    if (!windowclass)
         return DEFWINPROC();
 
     switch (message)
@@ -33,8 +32,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
         break;
 
     case WM_KEYDOWN:
-        if (window->wcb_keydown)
-            window->wcb_keydown(wid);
+        if (windowclass->wcb_keydown)
+            windowclass->wcb_keydown(wid);
         else
             return DEFWINPROC();
         break;
@@ -42,7 +41,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     case WM_ERASEBKGND:
         break;
 
-    /* 
+    /*
      * 这里的方法是我自己想的，不知道对不对，有没有BUG，但是能用。
      * 如果你有更好的方法，请提出来！
      */
@@ -50,8 +49,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     {
         PAINTSTRUCT ps;
         HDC hDC_;
-        hDC_ = BeginPaint(hWnd, &ps);
-        hDC = hDC_;
+        window->hDC = BeginPaint(hWnd, &ps);
         break;
     }
 

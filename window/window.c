@@ -34,7 +34,7 @@ BWindowClassID BRegisterWindowClass(HINSTANCE instance, char *classname, UINT st
     wc.lpszClassName = classname;
     wc.lpfnWndProc = (WNDPROC)WindowProc;
     wc.style = (style == -1 ? CS_DBLCLKS | CS_VREDRAW | CS_HREDRAW : style);
-    wc.hbrBackground = (background ? background : (HBRUSH)GetStockObject(BLACK_BRUSH));
+    wc.hbrBackground = (background ? background : NULL);
     wc.hIcon = (icon ? icon : BGetBreadIcon());
     wc.hCursor = (cursor ? cursor : LoadCursor(NULL, IDC_ARROW));
 
@@ -77,6 +77,7 @@ BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style, HINSTANCE i
 
     window.hWnd = hWnd;
     window.wcid = wcid;
+    window.hDC = 0;
     BListAppend(bwindows, &window);
 
     return bwindows->len - 1;
@@ -92,6 +93,9 @@ void BShowWindow(BWindowID wid, int cmdShow)
 int BMessageLoop(BWindowID wid, BWCBUpdate wcb_update)
 {
     MSG msg;
+    BWindow *window = BGetWindowByID(wid);
+    if (!window)
+        return -1;
 
     while (true)
     {

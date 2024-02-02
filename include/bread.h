@@ -43,6 +43,7 @@ typedef struct
 {
     HWND hWnd;
     BWindowClassID wcid;
+    HDC hDC;
 } BWindow;
 
 typedef struct
