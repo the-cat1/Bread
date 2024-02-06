@@ -6,6 +6,7 @@
  */
 
 #include <windows.h>
+#include <bread.h>
 
 #ifndef _BREAD_WINDOW_H
 #define _BREAD_WINDOW_H
@@ -30,6 +31,12 @@ typedef struct
     BWCBKeydown wcb_keydown;
 } BWindowClass;
 
+typedef struct
+{
+    BColor *buffer;
+    int width, height;
+} BScreenBuffer;
+
 void BInitWindow();
 void BQuitWindow();
 
@@ -41,6 +48,9 @@ BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style,
                         int height, HWND parent, HMENU menu);
 void BShowWindow(BWindowID wid, int cmdShow);
 int BMessageLoop(BWindowID wid, BWCBUpdate wcb_update);
+void BWindowDrawScreenBuffer(BWindowID wid, BScreenBuffer *sbuffer);
+void BScreenBufferCreate(BScreenBuffer *sbuffer, int width, int height);
+void BScreenBufferFree(BScreenBuffer *sbuffer);
 BWindowID BGetWindowIDByHwnd(HWND hWnd);
 BWindow *BGetWindowByHwnd(HWND hWnd);
 BWindow *BGetWindowByID(BWindowID wid);

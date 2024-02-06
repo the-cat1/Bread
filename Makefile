@@ -9,8 +9,6 @@ MAKE_ARGS		= --no-print-directory
 
 # Compile
 CC				= gcc
-DB				= gdb
-OBJECTS 		= bread window/window window/windowproc util/list
 BUILD_DIR		= build
 RELEASE_DIR		= release
 
@@ -20,7 +18,10 @@ ifeq ($(debug), true)
 	CARGS += -g
 endif
 
-objs = $(foreach F,$(OBJECTS),build/$(F).o )
+TARGETS 		= bread window/window window/windowproc util/list
+HEAD_FILES		= $(INCLUDE)/bread.h $(INCLUDE)/window.h $(INCLUDE)/util/list.h
+
+objs = $(foreach F,$(TARGETS),$(BUILD_DIR)/$(F).o )
 
 all:
 	@echo """"""""""""""""""""""""""""""""""""""""""""""
@@ -43,7 +44,7 @@ test:
 	$(MAKE) $(MAKE_ARGS) all
 	$(CC) test.c -o test.exe -L$(RELEASE_DIR) -lbread $(CARGS)
 
-$(RELEASE_DIR)/libbread.a: $(objs)
+$(RELEASE_DIR)/libbread.a: $(objs) $(HEAD_FILES)
 	ar -rc $(RELEASE_DIR)/libbread.a $(objs)
 
 $(BUILD_DIR)/%.o: %.c

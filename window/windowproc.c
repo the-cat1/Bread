@@ -30,34 +30,20 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
     case WM_DESTROY:
         PostQuitMessage(0);
-        break;
+        return DEFWINPROC();
 
     case WM_KEYDOWN:
         if (windowclass->wcb_keydown)
             windowclass->wcb_keydown(wid);
-        else
-            return DEFWINPROC();
-        break;
+        return DEFWINPROC();
 
     case WM_ERASEBKGND:
-        break;
+        return DEFWINPROC();
 
-    /**
-     * 这里的方法是我自己想的，不知道对不对，有没有BUG，但是能用。
-     * 如果你有更好的方法，请提出来！
-     */
     case WM_PAINT:
-    {
-        PAINTSTRUCT ps;
-        HDC hDC_;
-        window->hDC = BeginPaint(hWnd, &ps);
-        break;
-    }
-
+        return DEFWINPROC();
+    
     default:
         return DEFWINPROC();
-        break;
     }
-
-    return 0;
 }

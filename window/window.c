@@ -1,7 +1,7 @@
 /**
  * Bread
  * window/window.c
- * 
+ *
  * 对窗口的操作。
  */
 
@@ -92,7 +92,6 @@ BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style,
 
     window.hWnd = hWnd;
     window.wcid = wcid;
-    window.hDC = 0;
     BListAppend(bwindows, &window);
 
     return bwindows->len - 1;
@@ -129,6 +128,60 @@ int BMessageLoop(BWindowID wid, BWCBUpdate wcb_update)
     }
 
     return msg.wParam;
+}
+
+void BWindowDrawScreenBuffer(BWindowID wid, BScreenBuffer *sbuffer)
+{
+    HDC hDC, hDCMemory;
+    HBITMAP hbitmap;
+    BITMAP bitmap;
+    int bits_size;
+    char *bits;
+    int x, y;
+
+    BWindow *window = BGetWindowByID(wid);
+    if (!window)
+        return;
+
+    hDC = GetDC(window->hWnd);
+    hDCMemory = CreateCompatibleDC(hDC);
+    hbitmap = CreateCompatibleBitmap(hDC, sbuffer->width, sbuffer->height);
+    SelectObject(hDCMemory, hbitmap);
+
+    GetObject(hbitmap, sizeof(bitmap), &bitmap);
+    bits_size = bitmap.bmWidthBytes * bitmap.bmHeight;
+    bits = malloc(bits_size);
+    for (y = 0; y < sbuffer->height; y++)
+    {
+        for (x = 0; x < sbuffer->width; x++)
+        {
+            int bits_start = y * bitmap.bmWidthBytes + x * 4;
+            int sbuffer_index = y * sbuffer->width + x;
+            bits[bits_start + 0] = BGET_R(sbuffer->buffer[sbuffer_index]);
+            bits[bits_start + 1] = BGET_G(sbuffer->buffer[sbuffer_index]);
+            bits[bits_start + 2] = BGET_B(sbuffer->buffer[sbuffer_index]);
+        }
+    }
+    SetBitmapBits(hbitmap, bits_size, bits);
+    free(bits);
+
+    BitBlt(hDC, 0, 0, sbuffer->width, sbuffer->height, hDCMemory, 0, 0, SRCCOPY);
+
+    DeleteObject(hbitmap);
+    DeleteDC(hDCMemory);
+    DeleteDC(hDC);
+}
+
+void BScreenBufferCreate(BScreenBuffer *sbuffer, int width, int height)
+{
+    sbuffer->buffer = malloc(width * height * sizeof(BColor));
+    sbuffer->width = width;
+    sbuffer->height = height;
+}
+
+void BScreenBufferFree(BScreenBuffer *sbuffer)
+{
+    free(sbuffer->buffer);
 }
 
 BWindowID BGetWindowIDByHwnd(HWND hWnd)
