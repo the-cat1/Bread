@@ -1,7 +1,7 @@
 /**
  * Bread
  * bread.h
- * 
+ *
  * 对引擎的操作。
  */
 
@@ -14,24 +14,20 @@
 bool inited = false;
 HICON breadIcon;
 
-void BInit()
-{
+void BInit() {
     BInitWindow();
 
     // 设定 breadIcon
-    breadIcon = (HICON)LoadImage(NULL, "bread.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+    breadIcon =
+        (HICON)LoadImage(NULL, "bread.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
 
     inited = true;
 }
 
-void BQuit()
-{
+void BQuit() {
     BQuitWindow();
 
     inited = false;
 }
 
-HICON BGetBreadIcon()
-{
-    return breadIcon;
-}
+HICON BGetBreadIcon() { return breadIcon; }

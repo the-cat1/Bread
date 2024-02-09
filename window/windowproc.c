@@ -1,19 +1,18 @@
 /**
  * Bread
  * window/wndproc.c
- * 
+ *
  * 窗口的回调函数。
  */
 
 #include <stdio.h>
 
 #include "bread.h"
-#include "window.h"
 #include "util/list.h"
+#include "window.h"
 
 #define DEFWINPROC() DefWindowProc(hWnd, msg, wParam, lParam)
-LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
+LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     BWindowID wid;
     BWindow *window;
     BWindowClass *windowclass;
@@ -26,8 +25,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     if (!windowclass)
         return DEFWINPROC();
 
-    switch (msg)
-    {
+    switch (msg) {
     case WM_DESTROY:
         PostQuitMessage(0);
         return DEFWINPROC();
@@ -42,7 +40,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     case WM_PAINT:
         return DEFWINPROC();
-    
+
     default:
         return DEFWINPROC();
     }

@@ -7,10 +7,10 @@
 
 #include "window.h"
 
-#include <windows.h>
-#include <string.h>
-#include <stdlib.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include <windows.h>
 
 #include "bread.h"
 #include "util/list.h"
@@ -21,22 +21,19 @@ static BList *bwindow_classes;
 // 在 window/windowproc.c 中定义
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
 
-void BInitWindow()
-{
+void BInitWindow() {
     bwindows = BListCreate(sizeof(BWindow));
     bwindow_classes = BListCreate(sizeof(BWindowClass));
 }
 
-void BQuitWindow()
-{
+void BQuitWindow() {
     BListFree(bwindows);
     BListFree(bwindow_classes);
 }
 
 BWindowClassID BRegisterWindowClass(HINSTANCE instance, char *classname,
                                     UINT style, HBRUSH background, HICON icon,
-                                    HCURSOR cursor)
-{
+                                    HCURSOR cursor) {
     WNDCLASS wc;
     BWindowClass bwc;
 
@@ -64,9 +61,8 @@ BWindowClassID BRegisterWindowClass(HINSTANCE instance, char *classname,
 }
 
 BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style,
-                        HINSTANCE instance, int x, int y, int width,
-                        int height, HWND parent, HMENU menu)
-{
+                        HINSTANCE instance, int x, int y, int width, int height,
+                        HWND parent, HMENU menu) {
     HWND hWnd;
     BWindow window;
     char *classname = BGetWindowClassByID(wcid)->classname;
@@ -74,18 +70,11 @@ BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style,
     if (wcid < 0 || instance == NULL)
         return -1;
 
-    hWnd = CreateWindow(
-        classname,
-        title == NULL ? "Bread Window" : title,
-        style == -1 ? WS_OVERLAPPEDWINDOW | WS_VISIBLE : style,
-        x == -1 ? CW_USEDEFAULT : x,
-        y == -1 ? CW_USEDEFAULT : y,
-        width == -1 ? 360 : width,
-        height == -1 ? 240 : height,
-        parent,
-        menu,
-        instance,
-        0);
+    hWnd = CreateWindow(classname, title == NULL ? "Bread Window" : title,
+                        style == -1 ? WS_OVERLAPPEDWINDOW | WS_VISIBLE : style,
+                        x == -1 ? CW_USEDEFAULT : x,
+                        y == -1 ? CW_USEDEFAULT : y, width == -1 ? 360 : width,
+                        height == -1 ? 240 : height, parent, menu, instance, 0);
 
     if (hWnd = NULL)
         return -1;
@@ -97,31 +86,25 @@ BWindowID BCreateWindow(BWindowClassID wcid, char *title, int style,
     return bwindows->len - 1;
 }
 
-void BShowWindow(BWindowID wid, int cmdShow)
-{
+void BShowWindow(BWindowID wid, int cmdShow) {
     BWindow *window = BListGet(bwindows, wid);
     ShowWindow(window->hWnd, cmdShow);
     UpdateWindow(window->hWnd);
 }
 
-int BMessageLoop(BWindowID wid, BWCBUpdate wcb_update)
-{
+int BMessageLoop(BWindowID wid, BWCBUpdate wcb_update) {
     MSG msg;
     BWindow *window = BGetWindowByID(wid);
     if (!window)
         return -1;
 
-    while (true)
-    {
-        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-        {
+    while (true) {
+        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
             if (msg.message == WM_QUIT)
                 break;
             TranslateMessage(&msg);
             DispatchMessage(&msg);
-        }
-        else
-        {
+        } else {
             if (wcb_update)
                 wcb_update(wid);
         }
@@ -130,8 +113,7 @@ int BMessageLoop(BWindowID wid, BWCBUpdate wcb_update)
     return msg.wParam;
 }
 
-void BWindowDrawScreenBuffer(BWindowID wid, BScreenBuffer *sbuffer)
-{
+void BWindowDrawScreenBuffer(BWindowID wid, BScreenBuffer *sbuffer) {
     HDC hDC, hDCMemory;
     HBITMAP hbitmap;
     BITMAP bitmap;
@@ -151,10 +133,8 @@ void BWindowDrawScreenBuffer(BWindowID wid, BScreenBuffer *sbuffer)
     GetObject(hbitmap, sizeof(bitmap), &bitmap);
     bits_size = bitmap.bmWidthBytes * bitmap.bmHeight;
     bits = malloc(bits_size);
-    for (y = 0; y < sbuffer->height; y++)
-    {
-        for (x = 0; x < sbuffer->width; x++)
-        {
+    for (y = 0; y < sbuffer->height; y++) {
+        for (x = 0; x < sbuffer->width; x++) {
             int bits_start = y * bitmap.bmWidthBytes + x * 4;
             int sbuffer_index = y * sbuffer->width + x;
             bits[bits_start + 0] = BGET_R(sbuffer->buffer[sbuffer_index]);
@@ -165,32 +145,27 @@ void BWindowDrawScreenBuffer(BWindowID wid, BScreenBuffer *sbuffer)
     SetBitmapBits(hbitmap, bits_size, bits);
     free(bits);
 
-    BitBlt(hDC, 0, 0, sbuffer->width, sbuffer->height, hDCMemory, 0, 0, SRCCOPY);
+    BitBlt(hDC, 0, 0, sbuffer->width, sbuffer->height, hDCMemory, 0, 0,
+           SRCCOPY);
 
     DeleteObject(hbitmap);
     DeleteDC(hDCMemory);
     DeleteDC(hDC);
 }
 
-void BScreenBufferCreate(BScreenBuffer *sbuffer, int width, int height)
-{
+void BScreenBufferCreate(BScreenBuffer *sbuffer, int width, int height) {
     sbuffer->buffer = malloc(width * height * sizeof(BColor));
     sbuffer->width = width;
     sbuffer->height = height;
 }
 
-void BScreenBufferFree(BScreenBuffer *sbuffer)
-{
-    free(sbuffer->buffer);
-}
+void BScreenBufferFree(BScreenBuffer *sbuffer) { free(sbuffer->buffer); }
 
-BWindowID BGetWindowIDByHwnd(HWND hWnd)
-{
+BWindowID BGetWindowIDByHwnd(HWND hWnd) {
     int i;
     BWindow *window;
 
-    for (i = 0; i < bwindows->len; i++)
-    {
+    for (i = 0; i < bwindows->len; i++) {
         window = BListGet(bwindows, i);
         if (window->hWnd = hWnd)
             return i;
@@ -199,8 +174,7 @@ BWindowID BGetWindowIDByHwnd(HWND hWnd)
     return -1;
 }
 
-BWindow *BGetWindowByHwnd(HWND hWnd)
-{
+BWindow *BGetWindowByHwnd(HWND hWnd) {
     int wid = BGetWindowIDByHwnd(hWnd);
 
     if (wid < 0)
@@ -208,12 +182,8 @@ BWindow *BGetWindowByHwnd(HWND hWnd)
     return BListGet(bwindows, wid);
 }
 
-BWindow *BGetWindowByID(BWindowID wid)
-{
-    return BListGet(bwindows, wid);
-}
+BWindow *BGetWindowByID(BWindowID wid) { return BListGet(bwindows, wid); }
 
-BWindowClass *BGetWindowClassByID(BWindowClassID wcid)
-{
+BWindowClass *BGetWindowClassByID(BWindowClassID wcid) {
     return BListGet(bwindow_classes, wcid);
 }

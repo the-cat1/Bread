@@ -18,8 +18,7 @@ ifeq ($(debug), true)
 	CARGS += -g
 endif
 
-TARGETS 		= bread window/window window/windowproc util/list
-HEAD_FILES		= $(INCLUDE)/bread.h $(INCLUDE)/window.h $(INCLUDE)/util/list.h
+TARGETS 		= bread window/window window/windowproc graphics/render util/list
 
 objs = $(foreach F,$(TARGETS),$(BUILD_DIR)/$(F).o )
 
@@ -53,6 +52,7 @@ $(BUILD_DIR)/%.o: %.c
 folder:
 	if not exist $(BUILD_DIR) md $(BUILD_DIR)
 	if not exist $(BUILD_DIR)\window md $(BUILD_DIR)\window
+	if not exist $(BUILD_DIR)\graphics md $(BUILD_DIR)\graphics
 	if not exist $(BUILD_DIR)\util md $(BUILD_DIR)\util
 
 	if not exist $(RELEASE_DIR) md $(RELEASE_DIR)

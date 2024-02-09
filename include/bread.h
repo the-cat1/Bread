@@ -1,14 +1,14 @@
 /**
  * Bread
  * include/bread.h
- * 
+ *
  * Bread 引擎的基本函数。
  */
 
-#include <windows.h>
-
 #ifndef _BREAD_H
 #define _BREAD_H
+
+#include <windows.h>
 
 // BColor
 typedef int BColor;

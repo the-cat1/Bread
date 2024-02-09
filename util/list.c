@@ -1,19 +1,18 @@
 /**
  * Bread
  * util/list.c
- * 
+ *
  * 对列表的操作。
  */
 
 #include "util/list.h"
 
-#include <stdlib.h>
 #include <memory.h>
+#include <stdlib.h>
 
 #include "bread.h"
 
-BList *BListCreate(size_t esize)
-{
+BList *BListCreate(size_t esize) {
     BList *list;
 
     list = malloc(sizeof(BList));
@@ -24,23 +23,20 @@ BList *BListCreate(size_t esize)
     return list;
 }
 
-void BListAppend(BList *list, void *element)
-{
+void BListAppend(BList *list, void *element) {
     list->len++;
     list->datas = realloc(list->datas, list->len * list->esize);
     memcpy(list->datas + (list->len - 1) * list->esize, element, list->esize);
 }
 
-void *BListGet(BList *list, unsigned int index)
-{
+void *BListGet(BList *list, unsigned int index) {
     if (index < list->len)
         return list->datas + list->esize * index;
     else
         return NULL;
 }
 
-void BListFree(BList *list)
-{
+void BListFree(BList *list) {
     free(list->datas);
     free(list);
 }
