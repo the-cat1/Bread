@@ -45,3 +45,4 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         return DEFWINPROC();
     }
 }
+#undef DEFWINPROC

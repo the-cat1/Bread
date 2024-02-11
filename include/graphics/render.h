@@ -16,15 +16,22 @@ typedef struct {
     BList *objects;
 } BRendScene;
 
-enum BRendObjectType { BPOINT };
+enum BRendObjectType { BPOINT, BLINE };
 
 typedef struct {
     enum BRendObjectType type;
     union {
+        // BPOINT
         struct {
             BVector2f p;
             BColor color;
         } point;
+
+        // BLINE
+        struct {
+            BVector2f p1, p2;
+            BColor color;
+        } line;
     } data;
 } BRendObject;
 

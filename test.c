@@ -18,15 +18,6 @@ void keydown(BWindowID wid) {
 }
 
 void update(BWindowID wid) {
-    BRendObject *robject;
-    static float time = 0;
-
-    // 计算
-    robject = BListGet(rend_scene.objects, 0);
-    robject->data.point.p.x = sinf(time) * 50;
-    robject->data.point.p.y = cosf(time) * 50;
-    time += 0.1;
-
     // 绘制
     BRendRendScene(&sbuffer, &rend_scene);
     BWindowDrawScreenBuffer(wid, &sbuffer);
@@ -54,9 +45,10 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE, LPSTR cmdLine,
     BRendSceneCreate(&rend_scene);
 
     // Add rend object.
-    robject.type = BPOINT;
-    robject.data.point.p = (BVector2f){.x = 0, .y = 0};
-    robject.data.point.color = BRGB(255, 255, 255);
+    robject.type = BLINE;
+    robject.data.line.p1 = (BVector2f){.x = 0.0f, .y = 0.0f};
+    robject.data.line.p2 = (BVector2f){.x = -100.0f, .y = -50.0f};
+    robject.data.line.color = BRGB(255, 255, 255);
     BRendSceneAddObject(&rend_scene, &robject);
 
     // Message loop.
