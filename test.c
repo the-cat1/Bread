@@ -1,8 +1,6 @@
-#include <math.h>
-
 #include "bread.h"
 #include "graphics/render.h"
-#include "math/vector2.h"
+#include "math/vector.h"
 #include "util/list.h"
 #include "window.h"
 
@@ -18,6 +16,10 @@ void keydown(BWindowID wid) {
 }
 
 void update(BWindowID wid) {
+    BRendObject *robject = BListGet(rend_scene.objects, 0);
+    robject->data.triangle.p1.x += 0.01f;
+    robject->data.triangle.color = (int)robject->data.triangle.p1.x * 0x10;
+
     // 绘制
     BRendRendScene(&sbuffer, &rend_scene);
     BWindowDrawScreenBuffer(wid, &sbuffer);
@@ -45,10 +47,11 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE, LPSTR cmdLine,
     BRendSceneCreate(&rend_scene);
 
     // Add rend object.
-    robject.type = BLINE;
-    robject.data.line.p1 = (BVector2f){.x = 0.0f, .y = 0.0f};
-    robject.data.line.p2 = (BVector2f){.x = -100.0f, .y = -50.0f};
-    robject.data.line.color = BRGB(255, 255, 255);
+    robject.type = BTRIANGLE;
+    robject.data.triangle.p1 = (BVector2f){0.0f, 0.0f};
+    robject.data.triangle.p2 = (BVector2f){-100.0f, -50.0f};
+    robject.data.triangle.p3 = (BVector2f){-100.0f, -60.0f};
+    robject.data.triangle.color = BRGB(255, 255, 255);
     BRendSceneAddObject(&rend_scene, &robject);
 
     // Message loop.

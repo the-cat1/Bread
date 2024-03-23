@@ -1,26 +1,23 @@
 /**
  * Bread
- * include/math/vector2.h
+ * include/math/vector.h
  *
- * 有关二维向量的定义。
+ * 有关向量的定义。
  */
 
 #ifndef _BREAD_MATH_VECTOR2_H
 #define _BREAD_MATH_VECTOR2_H
 
 /* BVector2f */
-// clang-format off
 typedef struct {
-    union {
-        struct { float x, y; };
-        struct { float u, v; };
-    };
+    float x, y;
 } BVector2f;
-// clang-format on
 
 /* BVector2i */
 typedef struct {
     int x, y;
 } BVector2i;
+
+#define BVector2fTo2i(vf) ((BVector2i){(int)((vf).x + 0.5), (int)((vf).y + 0.5)})
 
 #endif /* _BREAD_MATH_VECTOR2_H */

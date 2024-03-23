@@ -23,6 +23,9 @@ TARGETS 		= bread window/window window/windowproc graphics/render util/list
 objs = $(foreach F,$(TARGETS),$(BUILD_DIR)/$(F).o )
 
 all:
+	$(MAKE) $(MAKE_ARGS) main
+
+main:
 	@echo """"""""""""""""""""""""""""""""""""""""""""""
 	@echo "         ____                     _         "
 	@echo "        | __ ) _ __ ___  __ _  __| |        "
@@ -35,12 +38,12 @@ all:
 ifneq ($(OS), Windows_NT)
 	@echo Bread just can compile or run on Windows!
 else
-	$(MAKE) $(MAKE_ARGS) folder
-	$(MAKE) $(MAKE_ARGS) $(RELEASE_DIR)/libbread.a
+	$(MAKE) folder
+	$(MAKE) $(RELEASE_DIR)/libbread.a
 endif
 
 test:
-	$(MAKE) $(MAKE_ARGS) all
+	$(MAKE) main
 	$(CC) test.c -o test.exe -L$(RELEASE_DIR) -lbread $(CARGS)
 
 $(RELEASE_DIR)/libbread.a: $(objs) $(HEAD_FILES)
