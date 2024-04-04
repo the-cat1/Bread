@@ -28,9 +28,6 @@ BINARY_FILE_NAME= libbread.a
 
 # debug mode
 debug_mode		= 0
-ifeq ("$(debug)"", "true")
-  debug_mode	= 1
-endif
 ifeq ("$(d)", "true")
   debug_mode	= 1
 endif
@@ -116,5 +113,6 @@ help:
 	@echo     all         Make Bread and exit.
 	@echo     clean       Delete all output files.
 	@echo Arguments:
-	@echo     debug(or d) If it set to true then enter to DEBUG MODE.
-	@echo                 DEBUG MODE: Take -g when compiling and set output to $(DEBUG_DIR).
+	@echo     d           If it set to true then enter to DEBUG MODE.
+	@echo DEBUG MODE:
+	@echo     set output to $(DEBUG_DIR) and take -g when compiling.

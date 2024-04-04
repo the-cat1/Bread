@@ -8,7 +8,6 @@
 #include "window.h"
 
 #include <stdbool.h>
-#include <stdlib.h>
 #include <string.h>
 #include <windows.h>
 
@@ -158,8 +157,6 @@ void BScreenBufferCreate(BScreenBuffer *sbuffer, int width, int height) {
     sbuffer->width = width;
     sbuffer->height = height;
 }
-
-void BScreenBufferFree(BScreenBuffer *sbuffer) { free(sbuffer->buffer); }
 
 BWindowID BGetWindowIDByHwnd(HWND hWnd) {
     int i;

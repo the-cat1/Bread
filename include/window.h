@@ -47,7 +47,12 @@ void BShowWindow(BWindowID wid, int cmdShow);
 int BMessageLoop(BWindowID wid, BWCBUpdate wcb_update);
 void BWindowDrawScreenBuffer(BWindowID wid, BScreenBuffer *sbuffer);
 void BScreenBufferCreate(BScreenBuffer *sbuffer, int width, int height);
-void BScreenBufferFree(BScreenBuffer *sbuffer);
+#define BScreenBufferSetPixel(sbuffer, x, y, color)                            \
+    {                                                                          \
+        if ((x) < (sbuffer)->width && (x) >= 0 && (y) < (sbuffer)->height &&   \
+            (y) >= 0)                                                          \
+            (sbuffer)->buffer[(x) + (sbuffer)->width * y] = (color);           \
+    }
 BWindowID BGetWindowIDByHwnd(HWND hWnd);
 BWindow *BGetWindowByHwnd(HWND hWnd);
 BWindow *BGetWindowByID(BWindowID wid);
